@@ -7,14 +7,13 @@ function App() {
   
   const [dog, setDog] = useState({})
   const [breed, setBreed] = useState("")
-  const [words, setWords] = useState([])
 
 
   const fetchDogData = async () => {
     let response = await fetch(BASE_URL)
     let data = await response.json()
-    setDog(data)
-    getDogBreed()
+    setDog(await data)
+    await setBreed(await getDogBreed())
   }
 
 
@@ -22,16 +21,11 @@ function App() {
     let message = dog.message.split("/")
     let dog_breed = message[4].split("-")
 
-    for (let i in dog_breed) {
-      setWords([dog_breed[dog]])
+    if (dog_breed.length >= 2) {
+      return `${dog_breed[1]} ${dog_breed[0]}`
+    } else {
+      return dog_breed[0]
     }
-
-    words.length > 1
-    ?
-    setBreed(`${dog_breed[1]} - ${dog_breed[0]}`)
-    :
-    setBreed(dog_breed[0])
-
   }
 
   useEffect(() => {
@@ -40,13 +34,15 @@ function App() {
 
   },[])
 
+
   return (
     <div className="App">
       <img  src={dog.message} className="dogImage"/>
       <h1>{breed}</h1>
       <button className='nextDog' onClick={() => fetchDogData()}>Next Dog</button>
     </div>
-  );
+  )
+
 }
 
 
